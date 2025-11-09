@@ -1,0 +1,6 @@
+
+// Docker Run
+docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+
+// MkDocs Build
+docker run --rm -v ${PWD}:/docs -w /docs squidfunk/mkdocs-material build  

@@ -1,0 +1,79 @@
+site_name: CyberDocs
+site_description: Documentation technique et cybersécurité
+site_author: Fabio SOARES JERONIMO
+site_url: https://exemple.com
+
+# Structure de navigation
+nav:
+  - Accueil: index.md
+  - Outils:
+    - Gobuster: outils/gobuster.md
+    - Nmap: outils/nmap.md
+    - Wireshark: outils/wireshark.md
+  - Defense: defense/defense.md
+  - Métiers:
+    - Index: metiers/index.md
+    - Analyste de sécurité: metiers/analyste-securite.md
+    - Ingénieur de sécurité: metiers/ingenieur-securite.md
+
+# Thème
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.integrate
+    - content.code.annotate
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: cyber-light
+      primary: black
+      accent: cyan
+    - media: "(prefers-color-scheme: dark)"
+      scheme: cyber-dark
+      primary: black
+      accent: lime
+  font:
+    text: Roboto Mono
+    code: Roboto Mono
+  icon:
+    logo: fontawesome/classic/shield-halved
+  favicon: images/favicon.png
+  logo: fontawesome/classic/shield-halved
+
+# Extra CSS & JS (pour un style cyber)
+extra_css:
+  - css/style.css
+
+# Markdown extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: true
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.tabbed
+  - pymdownx.details
+  - pymdownx.magiclink
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+# Extra metadata
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/votrecompte
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/votreprofil
+  generator: false

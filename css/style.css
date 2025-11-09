@@ -1,0 +1,25 @@
+:root {
+    --md-default-bg-color: #0d0d0d;
+    --md-default-fg-color: #00ff9f;
+    --md-code-bg-color: #101010;
+    --md-accent-fg-color: #00ffff;
+}
+
+body {
+    background: radial-gradient(circle at top left, #0a0a0a, #000000);
+}
+
+code,
+pre {
+    font-family: 'Roboto Mono', monospace;
+    color: #00ff9f;
+}
+
+a {
+    color: #00ffff;
+}
+
+.md-header {
+    background: #000000;
+    box-shadow: 0 0 10px #00ff9f;
+}

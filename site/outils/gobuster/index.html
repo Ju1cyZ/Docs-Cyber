@@ -1,0 +1,988 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Utilisation et exemples de l'outil Gobuster pour le bruteforce de répertoires, DNS, vhosts et fuzzing.">
+      
+      
+        <meta name="author" content="Fabio SOARES JERONIMO">
+      
+      
+        <link rel="canonical" href="https://exemple.com/outils/gobuster/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../nmap/">
+      
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Gobuster - CyberDocs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto Mono";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="cyber-light" data-md-color-primary="black" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gobuster" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="CyberDocs" class="md-header__button md-logo" aria-label="CyberDocs" data-md-component="logo">
+      
+  <img src="../../fontawesome/classic/shield-halved" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CyberDocs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Gobuster
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="cyber-light" data-md-color-primary="black" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="cyber-dark" data-md-color-primary="black" data-md-color-accent="lime"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CyberDocs" class="md-nav__button md-logo" aria-label="CyberDocs" data-md-component="logo">
+      
+  <img src="../../fontawesome/classic/shield-halved" alt="logo">
+
+    </a>
+    CyberDocs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Gobuster
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gobuster
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-propos" class="md-nav__link">
+    <span class="md-ellipsis">
+      À propos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#via-go-recommande-si-vous-avez-go-installe" class="md-nav__link">
+    <span class="md-ellipsis">
+      Via Go (recommandé si vous avez Go installé)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linux-debapt-exemples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linux (deb/apt) — exemples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Windows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brew-macos-homebrew" class="md-nav__link">
+    <span class="md-ellipsis">
+      Brew (macOS / Homebrew)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wordlists-recommandees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wordlists recommandées
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage général
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage général">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decouverte-de-repertoires-mode-dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      Découverte de répertoires (mode dir)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decouverte-dns-mode-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Découverte DNS (mode dns)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-host-discovery-mode-vhost" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual host discovery (mode vhost)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fuzzing-mode-fuzz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fuzzing (mode fuzz)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sorties-et-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sorties et formats
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#astuces-et-bonnes-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Astuces et bonnes pratiques
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-des-wildcards-et-pages-derreur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gestion des wildcards et pages d'erreur
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemples-pratiques-complets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemples pratiques complets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-de-sortie-extrait" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemple de sortie (extrait)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#depannage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dépannage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securite-et-ethique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité et éthique
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      Références
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Nmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wireshark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wireshark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../defense/defense/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Defense
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Métiers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Métiers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Index
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metiers/analyste-securite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analyste de sécurité
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metiers/ingenieur-securite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Ingénieur de sécurité
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gobuster">Gobuster<a class="headerlink" href="#gobuster" title="Permanent link">&para;</a></h1>
+<p>Une documentation concise et pratique pour utiliser Gobuster (outil en Go) — recherche de répertoires/fichiers, découverte de sous-domaines (DNS), vhosts et fuzzing de paramètres.</p>
+<h2 id="a-propos">À propos<a class="headerlink" href="#a-propos" title="Permanent link">&para;</a></h2>
+<p>Gobuster est un outil rapide écrit en Go, utilisé principalement pour la reconnaissance web :</p>
+<ul>
+<li>Bruteforce de répertoires/fichiers (mode <code>dir</code>).</li>
+<li>Découverte de sous-domaines via DNS (<code>dns</code>).</li>
+<li>Recherche de virtual hosts (<code>vhost</code>).</li>
+<li>Fuzzing de paramètres et endpoints (<code>fuzz</code>).</li>
+</ul>
+<p>Site officiel / dépôt : <a href="https://github.com/OJ/gobuster">https://github.com/OJ/gobuster</a></p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>Vous pouvez installer Gobuster de différentes manières selon votre plateforme.</p>
+<h3 id="via-go-recommande-si-vous-avez-go-installe">Via Go (recommandé si vous avez Go installé)<a class="headerlink" href="#via-go-recommande-si-vous-avez-go-installe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>go<span class="w"> </span>install<span class="w"> </span>github.com/OJ/gobuster/v3@latest
+<span class="c1"># L&#39;exécutable sera dans $GOPATH/bin ou $GOBIN</span>
+</code></pre></div>
+<h3 id="linux-debapt-exemples">Linux (deb/apt) — exemples<a class="headerlink" href="#linux-debapt-exemples" title="Permanent link">&para;</a></h3>
+<p>Sur certaines distributions vous trouverez gobuster dans les dépôts :</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>gobuster
+</code></pre></div>
+<h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h3>
+<p>Téléchargez le binaire depuis les Releases du dépôt GitHub et placez-le dans un répertoire présent dans votre PATH.</p>
+<h3 id="brew-macos-homebrew">Brew (macOS / Homebrew)<a class="headerlink" href="#brew-macos-homebrew" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>gobuster
+</code></pre></div>
+<h2 id="wordlists-recommandees">Wordlists recommandées<a class="headerlink" href="#wordlists-recommandees" title="Permanent link">&para;</a></h2>
+<p>Les wordlists populaires :</p>
+<ul>
+<li>SecLists (recommandé) : <a href="https://github.com/danielmiessler/SecLists">https://github.com/danielmiessler/SecLists</a></li>
+<li>common.txt / directory-list-2.3-medium.txt / big.txt selon le niveau de profondeur</li>
+</ul>
+<p>Exemple d'installation de SecLists :</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/danielmiessler/SecLists.git<span class="w"> </span>/opt/seclists
+</code></pre></div>
+<h2 id="usage-general">Usage général<a class="headerlink" href="#usage-general" title="Permanent link">&para;</a></h2>
+<p>La forme générale :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>&lt;mode&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;target&gt;<span class="w"> </span>-w<span class="w"> </span>&lt;wordlist&gt;<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
+</code></pre></div>
+<p>Modes principaux :</p>
+<ul>
+<li><code>dir</code> : découverte de répertoires/fichiers HTTP</li>
+<li><code>dns</code> : discovery DNS (résolution d'enregistrements A/AAAA)</li>
+<li><code>vhost</code> : recherche de virtual hosts</li>
+<li><code>fuzz</code> : fuzzing générique</li>
+</ul>
+<h3 id="decouverte-de-repertoires-mode-dir">Découverte de répertoires (mode dir)<a class="headerlink" href="#decouverte-de-repertoires-mode-dir" title="Permanent link">&para;</a></h3>
+<p>Exemple basique :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dir<span class="w"> </span>-u<span class="w"> </span>https://example.com/<span class="w"> </span>-w<span class="w"> </span>/opt/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
+<p>Options utiles :</p>
+<ul>
+<li><code>-u, --url</code> : URL cible (ou <code>-u</code> + <code>-k</code> pour ignorer certif SSL si nécessaire)</li>
+<li><code>-w, --wordlist</code> : chemin de la wordlist</li>
+<li><code>-t, --threads</code> : nombre de threads (par défaut ~10)</li>
+<li><code>-x</code> : extensions à tester (ex: <code>php,html,txt</code>)</li>
+<li><code>-s</code> : codes HTTP à considérer comme intéressants (ex: <code>200,204,301,302,307,401,403</code>)</li>
+<li><code>-o</code> : fichier de sortie</li>
+<li><code>-a</code> : user-agent personnalisé</li>
+</ul>
+<p>Gestion du SSL (ignorer la vérification) :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dir<span class="w"> </span>-u<span class="w"> </span>https://example.com/<span class="w"> </span>-w<span class="w"> </span>wordlist.txt<span class="w"> </span>-k
+</code></pre></div>
+<p>Exemple avec extensions :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dir<span class="w"> </span>-u<span class="w"> </span>https://example.com/<span class="w"> </span>-w<span class="w"> </span>/opt/SecLists/Discovery/Web-Content/common.txt<span class="w"> </span>-x<span class="w"> </span>.php,.html,.bak<span class="w"> </span>-t<span class="w"> </span><span class="m">40</span><span class="w"> </span>-o<span class="w"> </span>results_dir.txt
+</code></pre></div>
+<h3 id="decouverte-dns-mode-dns">Découverte DNS (mode dns)<a class="headerlink" href="#decouverte-dns-mode-dns" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-w<span class="w"> </span>/opt/SecLists/Discovery/DNS/subdomain-top1million-20000.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">50</span><span class="w"> </span>-o<span class="w"> </span>results_dns.txt
+</code></pre></div>
+<p>Options notables :</p>
+<ul>
+<li><code>-d, --domain</code> : domaine principal</li>
+<li><code>-r, --resolvers</code> : fichier de résolveurs DNS à utiliser (par défaut /etc/resolv.conf sur Linux)</li>
+</ul>
+<p>Exemple avec résolveurs custom :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-w<span class="w"> </span>subs.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">40</span>
+</code></pre></div>
+<h3 id="virtual-host-discovery-mode-vhost">Virtual host discovery (mode vhost)<a class="headerlink" href="#virtual-host-discovery-mode-vhost" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>vhost<span class="w"> </span>-u<span class="w"> </span>https://example.com<span class="w"> </span>-w<span class="w"> </span>vhosts.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
+<p>Le mode vhost teste des en-têtes Host différents pour détecter des virtual hosts hébergés derrière la même IP.</p>
+<h3 id="fuzzing-mode-fuzz">Fuzzing (mode fuzz)<a class="headerlink" href="#fuzzing-mode-fuzz" title="Permanent link">&para;</a></h3>
+<p>Le mode <code>fuzz</code> vous permet d'injecter le mot courant de la wordlist dans une URL ou un paramètre via la token <code>{}</code>, par ex :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>fuzz<span class="w"> </span>-u<span class="w"> </span>https://example.com/page.php?file<span class="o">=</span>FUZZ<span class="w"> </span>-w<span class="w"> </span>wordlist.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">40</span>
+</code></pre></div>
+<p>Dans Gobuster v3+, la syntaxe correcte pour la position de fuzz est d'utiliser <code>FUZZ</code> (ou <code>{}</code> selon la version) ; vérifiez la version et l'argument d'aide (<code>gobuster help fuzz</code>).</p>
+<h2 id="sorties-et-formats">Sorties et formats<a class="headerlink" href="#sorties-et-formats" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Par défaut Gobuster affiche les résultats en console.</li>
+<li>Utilisez <code>-o &lt;fichier&gt;</code> pour écrire les résultats.</li>
+<li>Certaines versions supportent <code>-json</code> ou un format JSON (vérifiez <code>gobuster --help</code>).</li>
+</ul>
+<p>Exemple :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dir<span class="w"> </span>-u<span class="w"> </span>https://example.com<span class="w"> </span>-w<span class="w"> </span>wordlist.txt<span class="w"> </span>-o<span class="w"> </span>output.txt
+</code></pre></div>
+<h2 id="astuces-et-bonnes-pratiques">Astuces et bonnes pratiques<a class="headerlink" href="#astuces-et-bonnes-pratiques" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Commencez avec une wordlist courte puis montez en taille pour réduire le bruit.</li>
+<li>Utilisez des <code>-t</code> (threads) adaptés à la cible et à votre bande passante : 10-50 est classique.</li>
+<li>Respectez la charge cible : évitez de surcharger des serveurs en production.</li>
+<li>Filtrez les faux positifs (wildcards DNS ou pages d'erreur custom) en ajustant <code>-s</code> et en testant manuellement les URLs trouvées.</li>
+<li>Combinez avec <code>wfuzz</code>, <code>dirsearch</code> ou <code>ffuf</code> si vous voulez comparer résultats/perf.</li>
+</ul>
+<h2 id="gestion-des-wildcards-et-pages-derreur">Gestion des wildcards et pages d'erreur<a class="headerlink" href="#gestion-des-wildcards-et-pages-derreur" title="Permanent link">&para;</a></h2>
+<p>Certains sites répondent toujours 200 même pour des chemins inexistants. Pour détecter cela :</p>
+<ol>
+<li>Testez un fichier aléatoire improbable (ex: <code>/thispathshouldnotexist_12345</code>) et observez le code et la longueur.</li>
+<li>Si vous observez la même longueur qu'une découverte, utilisez <code>--wildcard</code> ou filtrez par longueur/regex (selon les capacités de la version) ou examinez manuellement.</li>
+</ol>
+<h2 id="exemples-pratiques-complets">Exemples pratiques complets<a class="headerlink" href="#exemples-pratiques-complets" title="Permanent link">&para;</a></h2>
+<p>1) Bruteforce rapide, wordlist medium, extensions .php et .bak, sortie dans un fichier :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dir<span class="w"> </span>-u<span class="w"> </span>https://target.local/<span class="w"> </span>-w<span class="w"> </span>/opt/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt<span class="w"> </span>-x<span class="w"> </span>.php,.bak<span class="w"> </span>-t<span class="w"> </span><span class="m">40</span><span class="w"> </span>-s<span class="w"> </span><span class="m">200</span>,204,301,302,307,403<span class="w"> </span>-o<span class="w"> </span>gobuster_dir.txt
+</code></pre></div>
+<p>2) Découverte DNS avec résolveurs rapides :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>example.com<span class="w"> </span>-w<span class="w"> </span>/opt/SecLists/Discovery/DNS/subdomains-top1million-20000.txt<span class="w"> </span>-r<span class="w"> </span>resolvers.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">50</span><span class="w"> </span>-o<span class="w"> </span>gobuster_dns.txt
+</code></pre></div>
+<p>3) Fuzz d'une URL avec paramètre :</p>
+<div class="highlight"><pre><span></span><code>gobuster<span class="w"> </span>fuzz<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;https://example.com/page.php?file=FUZZ&quot;</span><span class="w"> </span>-w<span class="w"> </span>/opt/SecLists/Discovery/Web-Content/common.txt<span class="w"> </span>-t<span class="w"> </span><span class="m">30</span><span class="w"> </span>-o<span class="w"> </span>gobuster_fuzz.txt
+</code></pre></div>
+<h2 id="exemple-de-sortie-extrait">Exemple de sortie (extrait)<a class="headerlink" href="#exemple-de-sortie-extrait" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code># Exemple simplifié
+/admin (Status: 301)
+/robots.txt (Status: 200)
+/uploads (Status: 403)
+</code></pre></div>
+<h2 id="depannage">Dépannage<a class="headerlink" href="#depannage" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Si Gobuster ne démarre pas : vérifiez que l'exécutable est dans le PATH et exécutez <code>gobuster --version</code>.</li>
+<li>Erreurs SSL : utilisez <code>-k</code> pour ignorer la vérification, ou fournissez un certificat valide.</li>
+<li>Problèmes de permissions sur wordlists : vérifiez les droits de lecture.</li>
+</ul>
+<h2 id="securite-et-ethique">Sécurité et éthique<a class="headerlink" href="#securite-et-ethique" title="Permanent link">&para;</a></h2>
+<p>Ne lancez Gobuster que sur des cibles pour lesquelles vous avez l'autorisation explicite. Les scans non autorisés peuvent être illégaux ou considérés comme une activité malveillante.</p>
+<h2 id="references">Références<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Dépôt GitHub : <a href="https://github.com/OJ/gobuster">https://github.com/OJ/gobuster</a></li>
+<li>SecLists (wordlists) : <a href="https://github.com/danielmiessler/SecLists">https://github.com/danielmiessler/SecLists</a></li>
+</ul>
+<hr />
+<p>Si vous voulez, je peux :</p>
+<ul>
+<li>ajouter des exemples Windows PowerShell adaptés (escape des guillemets, chemins) ;</li>
+<li>ajouter des scénarios de test (fichiers de résolveurs, scripts d'exécution) ;</li>
+<li>générer une page sœur avec captures d'écran ou exemples JSON.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/votrecompte" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/votreprofil" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "toc.integrate", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
